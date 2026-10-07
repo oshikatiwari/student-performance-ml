@@ -10,6 +10,10 @@
 ## Executive Summary
 This report presents an end-to-end, production-ready machine learning system to predict university student final exam scores (`FinalExamScore`). The solution strictly prevents data leakage through an integrated Scikit-Learn `Pipeline`, conducts 5-fold cross-validation benchmarking across five distinct model families, performs rigorous residual error diagnostics identifying vulnerable student cohorts, and packages predictions into a clean CLI and interactive web applications (Streamlit and Gradio).
 
+### 🌐 Live Production Deployments
+- **Streamlit Web Application:** [https://student-performance-ml-t7nmmchsj8pvd4szsh9nxn.streamlit.app/](https://student-performance-ml-t7nmmchsj8pvd4szsh9nxn.streamlit.app/)
+- **Gradio Web Application (Hugging Face Spaces):** [https://huggingface.co/spaces/oshikax/student-performance-predictor](https://huggingface.co/spaces/oshikax/student-performance-predictor)
+
 ---
 
 ## 1. Comprehensive Data Audit & Leakage Check

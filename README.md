@@ -13,6 +13,12 @@ pinned: false
 
 Production-grade Machine Learning pipeline to predict student final examination scores (`FinalExamScore`) while rigorously guarding against target leakage, out-of-bounds sentinels, and model instability.
 
+## 🌐 Live Web Demos
+- 🚀 **Streamlit Cloud App:** [https://student-performance-ml-t7nmmchsj8pvd4szsh9nxn.streamlit.app/](https://student-performance-ml-t7nmmchsj8pvd4szsh9nxn.streamlit.app/)
+- 🎨 **Gradio App (Hugging Face Spaces):** [https://huggingface.co/spaces/oshikax/student-performance-predictor](https://huggingface.co/spaces/oshikax/student-performance-predictor)
+
+---
+
 ## 🚀 Key Highlights
 - **Leakage-Proof Pipeline:** Custom `PreExamFeatureExtractor` automatically strips non-semantic IDs and post-exam target leakage (`PostExamConfidence`).
 - **Sentinel Sanitization:** Capping out-of-bounds outliers and converting sentinel `-1.0` markers to `NaN` for median imputation.
