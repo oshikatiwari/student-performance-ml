@@ -8,6 +8,7 @@ Customized to match the exact Semantic Recommender prototype layout:
 - Predicts ONLY when the user clicks 'Find predictions' (no premature initial predictions)
 """
 from pathlib import Path
+import sys
 import math
 import joblib
 import numpy as np
@@ -16,15 +17,50 @@ import gradio as gr
 import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+import pipeline
+from pipeline import PreExamFeatureExtractor, SentinelAndBoundsSanitizer, build_pipeline
+
 MODEL_PATH = ROOT / "artifacts" / "model_pipeline.joblib"
+DATA_PATH = ROOT / "data" / "student_performance.csv"
 
 RMSE_ESTIMATE = 6.949
 PASSING_THRESHOLD = 50.0
 
-if MODEL_PATH.exists():
-    pipeline = joblib.load(MODEL_PATH)
-else:
-    pipeline = None
+def load_pipeline():
+    if MODEL_PATH.exists():
+        try:
+            return joblib.load(MODEL_PATH)
+        except Exception:
+            pass
+    from sklearn.ensemble import HistGradientBoostingRegressor
+    if DATA_PATH.exists():
+        df = pd.read_csv(DATA_PATH)
+        valid_mask = (df["FinalExamScore"] >= 0.0) & (df["FinalExamScore"] <= 100.0)
+        df_clean = df[valid_mask].copy()
+        X = df_clean.drop(columns=["FinalExamScore"])
+        y = df_clean["FinalExamScore"].values
+        champion = HistGradientBoostingRegressor(
+            learning_rate=0.05,
+            max_iter=120,
+            max_depth=4,
+            min_samples_leaf=15,
+            l2_regularization=0.5,
+            random_state=42
+        )
+        pipe = build_pipeline(model=champion)
+        pipe.fit(X, y)
+        MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            joblib.dump(pipe, MODEL_PATH)
+        except Exception:
+            pass
+        return pipe
+    return None
+
+pipeline = load_pipeline()
 
 
 def predict_student(

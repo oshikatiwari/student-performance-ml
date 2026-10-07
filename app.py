@@ -1,10 +1,19 @@
 from pathlib import Path
+import sys
 import math
 import joblib
 import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
+
+# Ensure root directory is on sys.path for Streamlit Cloud
+ROOT = Path(__file__).resolve().parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+import pipeline
+from pipeline import PreExamFeatureExtractor, SentinelAndBoundsSanitizer, build_pipeline
 
 # ---------------------------------------------------------
 # Page Configuration
@@ -15,8 +24,8 @@ st.set_page_config(
     layout="wide"
 )
 
-ROOT = Path(__file__).resolve().parent
 MODEL_PATH = ROOT / "artifacts" / "model_pipeline.joblib"
+DATA_PATH = ROOT / "data" / "student_performance.csv"
 
 RMSE_ESTIMATE = 6.949
 PASSING_THRESHOLD = 50.0
@@ -53,10 +62,41 @@ div.stButton > button:first-child:active {
 
 @st.cache_resource
 def load_pipeline():
-    if not MODEL_PATH.exists():
-        st.error("Model pipeline artifact not found. Please train the model first.")
-        return None
-    return joblib.load(MODEL_PATH)
+    # 1. Try loading existing serialized pipeline
+    if MODEL_PATH.exists():
+        try:
+            return joblib.load(MODEL_PATH)
+        except Exception:
+            pass
+
+    # 2. Resilient Cloud Fallback: If OS/Python pickle version differs on Streamlit Cloud,
+    # immediately fit production champion in < 1 second on verified clean training data.
+    from sklearn.ensemble import HistGradientBoostingRegressor
+    if DATA_PATH.exists():
+        df = pd.read_csv(DATA_PATH)
+        valid_mask = (df["FinalExamScore"] >= 0.0) & (df["FinalExamScore"] <= 100.0)
+        df_clean = df[valid_mask].copy()
+        X = df_clean.drop(columns=["FinalExamScore"])
+        y = df_clean["FinalExamScore"].values
+        champion = HistGradientBoostingRegressor(
+            learning_rate=0.05,
+            max_iter=120,
+            max_depth=4,
+            min_samples_leaf=15,
+            l2_regularization=0.5,
+            random_state=42
+        )
+        pipe = build_pipeline(model=champion)
+        pipe.fit(X, y)
+        MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            joblib.dump(pipe, MODEL_PATH)
+        except Exception:
+            pass
+        return pipe
+
+    st.error("Model pipeline and training data not found.")
+    return None
 
 
 pipeline = load_pipeline()
