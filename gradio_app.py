@@ -244,7 +244,7 @@ initial_placeholder = """
 </div>
 """
 
-with gr.Blocks(title="Student Performance Predictor") as demo:
+with gr.Blocks(title="Student Performance Predictor", css=custom_css) as demo:
     # 1. Clean left-aligned title matching prototype
     gr.Markdown("# Student Performance Predictor")
 
@@ -285,10 +285,4 @@ with gr.Blocks(title="Student Performance Predictor") as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch(
-        share=True,
-        server_port=7861,
-        inbrowser=True,
-        css=custom_css,
-        theme=gr.themes.Soft(primary_hue="slate", neutral_hue="slate")
-    )
+    demo.launch()
