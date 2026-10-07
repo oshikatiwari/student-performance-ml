@@ -62,6 +62,12 @@ def load_pipeline():
 
 pipeline = load_pipeline()
 
+try:
+    import spaces
+    HAS_SPACES = True
+except Exception:
+    HAS_SPACES = False
+
 
 def predict_student(
     previous_score: float,
@@ -199,6 +205,10 @@ def predict_student(
     """
 
     return cards_html, gr.update(value=fig, visible=True), gr.update(value=advisory_html, visible=True)
+
+
+if HAS_SPACES:
+    predict_student = spaces.GPU(predict_student)
 
 
 # Custom styling for prototype look:
