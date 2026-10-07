@@ -1,3 +1,14 @@
+---
+title: Student Performance Predictor
+emoji: 🎓
+colorFrom: indigo
+colorTo: blue
+sdk: gradio
+sdk_version: 4.44.1
+app_file: gradio_app.py
+pinned: false
+---
+
 # Student Performance Prediction
 
 Production-grade Machine Learning pipeline to predict student final examination scores (`FinalExamScore`) while rigorously guarding against target leakage, out-of-bounds sentinels, and model instability.
