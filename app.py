@@ -187,6 +187,7 @@ if predict_button and pipeline is not None:
     ax.set_ylim(0, 105)
     ax.set_yticks([0, 20, 40, 60, 80, 100])
     ax.set_yticklabels(["0%", "20%", "40%", "60%", "80%", "100%"], color="#777777", fontsize=9)
+    ax.set_xticks(range(len(categories)))
     ax.set_xticklabels(categories, color="#555555", fontsize=10)
 
     # Styling: clean minimalist frame (no top/right spines, faint horizontal guides)

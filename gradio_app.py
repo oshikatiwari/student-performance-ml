@@ -127,6 +127,7 @@ def predict_student(
     ax.set_ylim(0, 105)
     ax.set_yticks([0, 20, 40, 60, 80, 100])
     ax.set_yticklabels(["0%", "20%", "40%", "60%", "80%", "100%"], color="#777777", fontsize=8.5)
+    ax.set_xticks(range(len(categories)))
     ax.set_xticklabels(categories, color="#333333", fontsize=9.5, fontweight="600")
 
     ax.spines["top"].set_visible(False)
@@ -207,7 +208,7 @@ initial_placeholder = """
 </div>
 """
 
-with gr.Blocks(title="Student Performance Predictor", css=custom_css) as demo:
+with gr.Blocks(title="Student Performance Predictor") as demo:
     # 1. Clean left-aligned title matching prototype
     gr.Markdown("# Student Performance Predictor")
 
@@ -252,5 +253,6 @@ if __name__ == "__main__":
         server_name="127.0.0.1",
         server_port=7861,
         inbrowser=True,
+        css=custom_css,
         theme=gr.themes.Soft(primary_hue="slate", neutral_hue="slate")
     )
