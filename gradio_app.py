@@ -286,7 +286,7 @@ with gr.Blocks(title="Student Performance Predictor") as demo:
 
 if __name__ == "__main__":
     demo.launch(
-        server_name="127.0.0.1",
+        share=True,
         server_port=7861,
         inbrowser=True,
         css=custom_css,
