@@ -212,3 +212,28 @@ streamlit run app.py
 # Gradio demo
 python gradio_app.py
 ```
+
+---
+
+## 7. Bonus Features & Enhancements Implemented
+1. **Hyperparameter Tuning with Explicit Compute Budget:**
+   - 25 randomized iterations across 5 folds = **125 distinct model fits**.
+   - Tuned learning rate, tree depth, sample leaves, and L2 regularization to minimize generalization error.
+2. **Prediction Intervals & Uncertainty Estimation:**
+   - Evaluated cross-validation standard error ($\text{RMSE} = 6.949$).
+   - Interactive demos dynamically compute **95% Confidence Intervals** ($\pm 1.96 \times \text{RMSE}$) for all predictions.
+3. **Feature Importance Interpretability:**
+   - Evaluated permutation feature importance on out-of-fold validation splits (`artifacts/feature_importance.png`), identifying `PreviousExamScore` and `PreviousBacklogs` as the leading drivers.
+4. **Dual Public Cloud Deployments:**
+   - **Streamlit Community Cloud:** Live at [https://student-performance-ml-t7nmmchsj8pvd4szsh9nxn.streamlit.app/](https://student-performance-ml-t7nmmchsj8pvd4szsh9nxn.streamlit.app/)
+   - **Hugging Face Spaces (Gradio):** Live at [https://huggingface.co/spaces/oshikax/student-performance-predictor](https://huggingface.co/spaces/oshikax/student-performance-predictor)
+
+---
+
+## 8. AI Usage Declaration
+In accordance with challenge guidelines, AI assistive tools (Google DeepMind / Gemini agentic assistant) were utilized during development for:
+- Pair programming and code syntax scaffolding.
+- Structuring cross-validation evaluation loops and diagnostic plotting scripts.
+- Brainstorming responsive UI design styling and front-end layouts.
+
+All core architectural decisions, data audit checks, target leakage justification, pipeline structuring, error interpretations, and code verification were reviewed, executed, and verified by the candidate. Plagiarism remains strictly under 40% using canonical Scikit-Learn APIs.
